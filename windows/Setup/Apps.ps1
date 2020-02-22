@@ -42,6 +42,7 @@ choco upgrade --cache="$ChocoCachePath" --yes sharex
 choco upgrade --cache="$ChocoCachePath" --yes powershell-core
 choco upgrade --cache="$ChocoCachePath" --yes microsoft-windows-terminal
 choco upgrade --cache="$ChocoCachePath" --yes starship
+choco upgrade --cache="$ChocoCachePath" --yes kdiff3
 
 #--- Apps ---
 choco upgrade --cache="$ChocoCachePath" --yes microsoft-edge
@@ -55,6 +56,7 @@ choco upgrade --cache="$ChocoCachePath" --yes googledrive
 choco upgrade --cache="$ChocoCachePath" --yes notepadplusplus.install
 choco upgrade --cache="$ChocoCachePath" --yes foxitreader
 choco upgrade --cache="$ChocoCachePath" --yes qbittorrent
+choco upgrade --cache="$ChocoCachePath" --yes windirstat
 #choco upgrade --cache="$ChocoCachePath" --yes visualstudio2019professional --package-parameters "--add Microsoft.VisualStudio.Workload.NativeDesktop --includeRecommended --norestart --passive --locale en-US"
 
 #--- Leisure ---
