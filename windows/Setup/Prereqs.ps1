@@ -38,15 +38,16 @@ Disable-BingSearch
 Disable-GameBarTips
 
 Set-ItemProperty -Path "HKLM:SYSTEM\CurrentControlSet\Control\FileSystem" -Name LongPathsEnabled -Type DWord -Value 1
-Set-WindowsExplorerOptions -EnableShowFileExtensions
-Set-TaskbarOptions -Size Large -Dock Bottom -Combine Full -Lock
+Set-WindowsExplorerOptions -EnableShowHiddenFilesFoldersDrives -EnableShowProtectedOSFiles -EnableShowFileExtensions
+Set-TaskbarOptions -Size Small -Dock Bottom -Combine Full -Lock
+Set-TaskbarOptions -Size Small -Dock Bottom -Combine Full -AlwaysShowIconsOn
 
 ##########################################################################
 # Power settings
 ##########################################################################
 
-powercfg /change monitor-timeout-ac 0 # Don't turn off monitor
-powercfg /change standby-timeout-ac 0 # Don't ever sleep
+# powercfg /change monitor-timeout-ac 0 # Don't turn off monitor
+# powercfg /change standby-timeout-ac 0 # Don't ever sleep
 
 ##########################################################################
 # Uninstall bloatware
@@ -57,17 +58,51 @@ Get-AppxPackage Microsoft.WindowsAlarms | Remove-AppxPackage
 Get-AppxPackage *Autodesk* | Remove-AppxPackage
 Get-AppxPackage *BubbleWitch* | Remove-AppxPackage
 Get-AppxPackage king.com.CandyCrush* | Remove-AppxPackage
+Get-AppxPackage Microsoft.CommsPhone | Remove-AppxPackage
+Get-AppxPackage *Dropbox* | Remove-AppxPackage
+Get-AppxPackage *Facebook* | Remove-AppxPackage
+Get-AppxPackage *Keeper* | Remove-AppxPackage
+Get-AppxPackage *McAfee* | Remove-AppxPackage
+Get-AppxPackage *MarchofEmpires* | Remove-AppxPackage
+Get-AppxPackage *Minecraft* | Remove-AppxPackage
+Get-AppxPackage *Plex* | Remove-AppxPackage
+Get-AppxPackage *Twitter* | Remove-AppxPackage
 Get-AppxPackage Microsoft.MicrosoftOfficeHub | Remove-AppxPackage
+Get-AppxPackage Microsoft.WindowsFeedbackHub | Remove-AppxPackage
+Get-AppxPackage Microsoft.Getstarted | Remove-AppxPackage
 Get-AppxPackage Microsoft.WindowsMaps | Remove-AppxPackage
+Get-AppxPackage microsoft.windowscommunicationsapps | Remove-AppxPackage
 Get-AppxPackage *Netflix* | Remove-AppxPackage
+Get-AppxPackage Microsoft.BingFinance | Remove-AppxPackage
+Get-AppxPackage Microsoft.BingNews | Remove-AppxPackage
+Get-AppxPackage Microsoft.BingSports | Remove-AppxPackage
 Get-AppxPackage Microsoft.BingWeather | Remove-AppxPackage
 Get-AppxPackage Microsoft.SkypeApp | Remove-AppxPackage
 Get-AppxPackage Microsoft.Microsoft3DViewer | Remove-AppxPackage
 Get-AppxPackage Microsoft.MixedReality.Portal | Remove-AppxPackage
 Get-AppxPackage Microsoft.ZuneMusic | Remove-AppxPackage
+Get-AppxPackage Microsoft.ZuneVideo | Remove-AppxPackage
 Get-AppxPackage Microsoft.YourPhone | Remove-AppxPackage
-Get-AppxPackage Microsoft.MSPaint | Remove-AppxPackage
-Get-AppxPackage Microsoft.MicrosoftSolitaireCollection | Remove-AppxPackage
+Get-AppxPackage *Solitaire* | Remove-AppxPackage
+Get-AppxPackage Microsoft.Messaging | Remove-AppxPackage
+Get-AppxPackage Microsoft.OneConnect | Remove-AppxPackage
+Get-AppxPackage Microsoft.Office.OneNote | Remove-AppxPackage
+Get-AppxPackage Microsoft.People | Remove-AppxPackage
+Get-AppxPackage Microsoft.WindowsPhone | Remove-AppxPackage
+Get-AppxPackage Microsoft.Windows.Photos | Remove-AppxPackage
+Get-AppxPackage Microsoft.WindowsSoundRecorder | Remove-AppxPackage
+Get-AppxPackage Microsoft.MicrosoftStickyNotes | Remove-AppxPackage
+Get-AppxPackage Microsoft.Office.Sway | Remove-AppxPackage
+Get-AppxPackage Microsoft.XboxApp | Remove-AppxPackage
+Get-AppxPackage Microsoft.XboxIdentityProvider | Remove-AppxPackage
+
+# Uninstall McAfee Security App
+$mcafee = gci "HKLM:\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall" | foreach { gp $_.PSPath } | ? { $_ -match "McAfee Security" } | select UninstallString
+if ($mcafee) {
+	$mcafee = $mcafee.UninstallString -Replace "C:\Program Files\McAfee\MSC\mcuihost.exe",""
+	Write "Uninstalling McAfee..."
+	start-process "C:\Program Files\McAfee\MSC\mcuihost.exe" -arg "$mcafee" -Wait
+}
 
 ##########################################################################
 # Privacy
@@ -110,9 +145,51 @@ If (-Not (Test-Path HKLM:\SOFTWARE\Policies\Microsoft\Windows\Personalization)) 
 }
 Set-ItemProperty -Path HKLM:\SOFTWARE\Policies\Microsoft\Windows\Personalization -Name NoLockScreen -Type DWord -Value 1
 
+# Better File Explorer
+Set-ItemProperty -Path HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced -Name NavPaneExpandToCurrentFolder -Value 1		
+Set-ItemProperty -Path HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced -Name NavPaneShowAllFolders -Value 1		
+Set-ItemProperty -Path HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced -Name MMTaskbarMode -Value 2
+
+# These make "Quick Access" behave much closer to the old "Favorites"
+# Disable Quick Access: Recent Files
+Set-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer -Name ShowRecent -Type DWord -Value 0
+# Disable Quick Access: Frequent Folders
+Set-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer -Name ShowFrequent -Type DWord -Value 0
+# To Restore:
+# Set-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer -Name ShowRecent -Type DWord -Value 1
+# Set-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer -Name ShowFrequent -Type DWord -Value 1
+
+# Lock screen (not sleep) on lid close
+Set-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Power' -Name AwayModeEnabled -Type DWord -Value 1
+# To Restore:
+# Set-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Power' -Name AwayModeEnabled -Type DWord -Value 0
+
+# Use the Windows 7-8.1 Style Volume Mixer
+If (-Not (Test-Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\MTCUVC")) {
+	New-Item -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion" -Name MTCUVC | Out-Null
+}
+Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\MTCUVC" -Name EnableMtcUvc -Type DWord -Value 0
+# To Restore (Windows 10 Style Volume Control):
+# Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\MTCUVC" -Name EnableMtcUvc -Type DWord -Value 1
+
+# Disable Xbox Gamebar
+Set-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\GameDVR" -Name AppCaptureEnabled -Type DWord -Value 0
+Set-ItemProperty -Path "HKCU:\System\GameConfigStore" -Name GameDVR_Enabled -Type DWord -Value 0
+
 ##########################################################################
 # Restore Temporary Settings
 ##########################################################################
 
 Enable-UAC
 Enable-MicrosoftUpdate
+
+if($env:UserName -ne "WDAGUtilityAccount") { # Can't run windows update on Sandbox
+    Install-WindowsUpdate -acceptEula
+}
+
+#--- Rename the Computer ---
+# Requires restart, or add the -Restart flag
+# $computername = "cibolaburn"
+# if ($env:computername -ne $computername) {
+#	Rename-Computer -NewName $computername
+# }
