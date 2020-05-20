@@ -100,6 +100,7 @@ code --install-extension vstirbu.vscode-mermaid-preview
 code --install-extension yzhang.markdown-all-in-one
 code --install-extension zhuangtongfa.Material-theme
 code --install-extension zxh404.vscode-proto3
+code --install-extension davidsekar.redis-xplorer
 
 ##########################################################################
 # Install Rust
