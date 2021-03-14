@@ -30,6 +30,7 @@ choco upgrade --cache="$ChocoCachePath" --yes sysinternals
 choco upgrade --cache="$ChocoCachePath" --yes git -params "/GitAndUnixToolsOnPath /WindowsTerminal"
 choco upgrade --cache="$ChocoCachePath" --yes git-credential-manager-for-windows
 choco upgrade --cache="$ChocoCachePath" --yes poshgit
+choco upgrade --cache="$ChocoCachePath" --yes oh-my-posh
 choco upgrade --cache="$ChocoCachePath" --yes golang
 choco upgrade --cache="$ChocoCachePath" --yes autohotkey 
 choco upgrade --cache="$ChocoCachePath" --yes vagrant 
