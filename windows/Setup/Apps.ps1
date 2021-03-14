@@ -45,7 +45,6 @@ choco upgrade --cache="$ChocoCachePath" --yes starship
 choco upgrade --cache="$ChocoCachePath" --yes kdiff3
 
 #--- Apps ---
-choco upgrade --cache="$ChocoCachePath" --yes microsoft-edge
 choco upgrade --cache="$ChocoCachePath" --yes docker-for-windows
 choco upgrade --cache="$ChocoCachePath" --yes geforce-experience
 choco upgrade --cache="$ChocoCachePath" --yes vscode
@@ -55,13 +54,13 @@ choco upgrade --cache="$ChocoCachePath" --yes paint.net
 choco upgrade --cache="$ChocoCachePath" --yes googledrive
 choco upgrade --cache="$ChocoCachePath" --yes notepadplusplus.install
 choco upgrade --cache="$ChocoCachePath" --yes foxitreader
-choco upgrade --cache="$ChocoCachePath" --yes qbittorrent
 choco upgrade --cache="$ChocoCachePath" --yes windirstat
 choco upgrade --cache="$ChocoCachePath" --yes everything
 #choco upgrade --cache="$ChocoCachePath" --yes visualstudio2019professional --package-parameters "--add Microsoft.VisualStudio.Workload.NativeDesktop --includeRecommended --norestart --passive --locale en-US"
 
 #--- Leisure ---
 choco upgrade --cache="$ChocoCachePath" --yes steam
+choco upgrade --cache="$ChocoCachePath" --yes epicgameslauncher
 
 ##########################################################################
 # Install VSCode extensions
